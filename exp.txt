@@ -1,0 +1,35 @@
+Cas = Todos os dados de cas (folhas + raizes)
+Ldes = Todos os dados de LDES  (folhas + raizes)
+Folha_cas = dados de Cas somente de folhas
+folha_ldes = dados de ldes somente de folhas
+raiz_cas = dados de cas somente de raizes
+raiz_ldes = dados de ldes somente de raizes
+
+(0,05<) = menor a 0,05
+
+
+### teste de Shapiro Wilk ###
+dados	pvalor
+CAS		9,00E-14   (0,05<)
+LDES		2,58E-11   (0,05<)
+FOLHA_CAS	2,31E-06   (0,05<)
+FOLHA_LDES	1,82E-08   (0,05<)
+RAIZ_Cas	1,90E-06   (0,05<)
+RAIZ_ldes	1,97E-05   (0,05<)
+
+O Teste de Shapiro-Wilk tem como objetivo avaliar se uma distribuição é semelhante a uma distribuição normal. 
+Para dizer que uma distribuição é normal, o valor p precisa ser maior do que 0,05.
+
+
+### teste de Kruskal Wallis ###
+
+dados	p_valor
+cas		2,05E-05		(0,05<)
+ldes		4,25E-07		(0,05<)
+folha_cas	0.000236129187961843	(0,05<)
+folha_ldes	0.000728691595243196	(0,05<)
+raiz_cas	0.0934163821585871	(0,05>)*
+raiz_ldes	0.000353249041055624	(0,05<)
+
+o teste de Kruskal-Wallis é utilizado em situações onde queremos comparar mais de dois grupos independentes, de tamanhos iguais ou não, com variável resposta quantitativa. O teste é uma alternativa quando os pressupostos necesários pelo teste F da Análise de Variância não são atendidos, tendo em vista que o teste de Kruskal-Wallis dispensa a pressuposição de normalidade e homocedasticidade. 
+Concluí-se que não há evidências para rejeitar H0 pois p−valor= 'X' que por sua vez é >0.05, portanto os grupos possuem medianas semelhantes.
