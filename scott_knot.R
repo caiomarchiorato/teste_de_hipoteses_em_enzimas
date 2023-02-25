@@ -13,9 +13,12 @@ folha_ldes <- read.csv("FOLHA_LDES.csv", header = T, sep = ';')
 raiz_cas <- read.csv("RAIZ_CAS.csv", header = T, sep = ';')
 raiz_ldes <- read.csv("RAIZ_LDES.csv", header = T, sep = ';')
 
+folha_arg <- read.csv("",header= T, sep= ";")
+raiz_arg <- 
+
 ##################################
 #teste de shapiro-wilk
-#testes com p<0,05 são não paramétricos
+#testes com p<0,05 s?o n?o param?tricos
 shapiro_cas <- shapiro.test(cas$B)
 shapiro_ldes <- shapiro.test(ldes$B)
 shapiro_folha_cas <-shapiro.test(folha_cas$B)
@@ -75,7 +78,7 @@ write.csv(summary(teste_cas_folha), 'teste_cas_folha.csv')
 write.csv(summary(teste_ldes_folha), 'teste_ldes_folha.csv')
 
 
-#calculando as médias
+#calculando as m?dias
 mean_cas <- aggregate(B ~ A, data= cas, FUN = mean)
 mean_ldes <- aggregate(B ~ A, data=ldes, FUN = mean)
 
@@ -168,7 +171,7 @@ raiz_ldes_graf <- read.csv("teste_ldes_raiz.csv", header = T, sep = ';')
 cas_graf <- read.csv("teste_cas.csv", header = T, sep = ';')
 ldes_graf <- read.csv("teste_ldes.csv", header = T, sep = ';')
 
-#criando gráficos
+#criando gr?ficos
 #folhas ####################################
 ggplot(folha_cas_graf, (aes(x= A,
                    y= B,
