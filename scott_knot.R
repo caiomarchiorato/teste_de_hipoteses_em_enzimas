@@ -13,8 +13,8 @@ folha_ldes <- read.csv("FOLHA_LDES.csv", header = T, sep = ';')
 raiz_cas <- read.csv("RAIZ_CAS.csv", header = T, sep = ';')
 raiz_ldes <- read.csv("RAIZ_LDES.csv", header = T, sep = ';')
 
-folha_arg <- read.csv("",header= T, sep= ";")
-raiz_arg <- 
+folha_arg <- read.csv("teste_arg_raiz.csv",header= T, sep= ";")
+raiz_arg <- read.csv("teste_arg_folha.csv",header= T, sep= ";")
 
 ##################################
 #teste de shapiro-wilk
