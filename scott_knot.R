@@ -2,6 +2,8 @@
 library("ExpDes")
 library("ScottKnott")}
 
+library("ScottKnott")
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 cas <- read.csv("cas.csv", header = T, sep = ';')
@@ -25,14 +27,18 @@ shapiro_folha_cas <-shapiro.test(folha_cas$B)
 shapiro_folha_ldes <-shapiro.test(folha_ldes$B)
 shapiro_raiz_cas <-shapiro.test(raiz_cas$B)
 shapiro_raiz_ldes <-shapiro.test(raiz_ldes$B)
+shapiro_folha_arg <-shapiro.test(folha_arg$nmols.min.mg.prot)
+shapiro_raiz_arg <-shapiro.test(raiz_arg$nmols.min.mg.prot)
 
-dados <- c('cas','ldes','folha_cas','folha_ldes','raiz_cas','raiz_ldes')
+dados <- c('cas','ldes','folha_cas','folha_ldes','raiz_cas','raiz_ldes','folha_arg','raiz_arg')
 pvalor <- c(shapiro_cas$p.value,
             shapiro_ldes$p.value,
             shapiro_folha_cas$p.value,
             shapiro_folha_ldes$p.value,
             shapiro_raiz_cas$p.value,
-            shapiro_raiz_ldes$p.value)
+            shapiro_raiz_ldes$p.value,
+            shapiro_raiz_arg$p.value,
+            shapiro_folha_arg$p.value)
 normalidade <- cbind(dados, pvalor)
 
 
@@ -44,13 +50,17 @@ krusk_folha_cas <- kruskal.test(B ~ A, data = folha_cas)
 krusk_folha_ldes <- kruskal.test(B ~ A, data = folha_ldes)
 krusk_raiz_cas <- kruskal.test(B ~ A, data = raiz_cas)
 krusk_raiz_ldes <- kruskal.test(B ~ A, data = raiz_ldes)
+krusk_raiz_arg <- kruskal.test(nmols.min.mg.prot ~ Amostra, data= raiz_arg)
+krusk_folha_arg <- kruskal.test(nmols.min.mg.prot ~ Amostra, data= folha_arg)
 
 pvalor_k <- c(krusk_cas$p.value,
             krusk_ldes$p.value,
             krusk_folha_cas$p.value,
             krusk_folha_ldes$p.value,
             krusk_raiz_cas$p.value,
-            krusk_raiz_ldes$p.value)
+            krusk_raiz_ldes$p.value,
+            krusk_raiz_arg$p.value,
+            krusk_folha_arg$p.value)
 teste_krusk <- cbind(dados, pvalor_k)
 
 write.table(teste_krusk,'krusk.csv',sep=',')
@@ -65,8 +75,11 @@ teste_ldes_raiz <- SK(B ~ A, data= raiz_ldes, sig.level = 0.05)
 teste_cas <- SK(B ~ A, data= cas, sig.level = 0.05 )
 teste_ldes <- SK(B ~ A, data= ldes, sig.level = 0.05)
 
-summary(teste_cas)
-summary(teste_ldes)
+teste_arg_folha <- SK(nmols.min.mg.prot ~ Amostra, data= folha_arg, sig.level = 0.05 )
+teste_arg_raiz <- SK(nmols.min.mg.prot ~ Amostra, data= raiz_arg, sig.level = 0.05)
+
+summary(teste_arg_folha)
+summary(teste_arg_raiz)
 
 write.csv(summary(teste_cas), 'teste_cas.csv')
 write.csv(summary(teste_ldes), 'teste_ldes.csv')
@@ -77,6 +90,8 @@ write.csv(summary(teste_ldes_raiz), 'teste_ldes_raiz.csv')
 write.csv(summary(teste_cas_folha), 'teste_cas_folha.csv')
 write.csv(summary(teste_ldes_folha), 'teste_ldes_folha.csv')
 
+write.csv(summary(teste_arg_folha), 'teste_arg_folha.csv')
+write.csv(summary(teste_arg_raiz), 'teste_arg_raiz.csv')
 
 #calculando as m?dias
 mean_cas <- aggregate(B ~ A, data= cas, FUN = mean)
@@ -87,6 +102,9 @@ mean_folhas_ldes <- aggregate(B ~ A, data= folha_ldes, FUN = mean)
 
 mean_raiz_cas <- aggregate(B ~ A, data= raiz_cas, FUN = mean)
 mean_raiz_ldes <- aggregate(B ~ A, data= raiz_ldes, FUN = mean)
+
+mean_raiz_arg <- aggregate(nmols.min.mg.prot ~ Amostra, data= raiz_arg, FUN= mean)
+mean_folha_arg <- aggregate(nmols.min.mg.prot ~ Amostra, data= folha_arg, FUN = mean)
 
 ###################################################
 #teste de wilcoox ##################################
@@ -159,7 +177,7 @@ aux2 <- c( rep(1,length(cas$MT_R_0_30)),
 
 #write.table('wil.csv', wil$p.value, sep=',')
 #print(wil$p.value)
-
+library("ggplot2")
 
 
 folha_cas_graf <- read.csv("teste_cas_folha.csv", header = T, sep = ';')
@@ -170,6 +188,9 @@ raiz_ldes_graf <- read.csv("teste_ldes_raiz.csv", header = T, sep = ';')
 
 cas_graf <- read.csv("teste_cas.csv", header = T, sep = ';')
 ldes_graf <- read.csv("teste_ldes.csv", header = T, sep = ';')
+
+raiz_arg_graf <- read.csv("teste_arg_raiz.csv", header = T, sep = ';')
+folha_arg_graf <- read.csv("teste_arg_folha.csv", header = T, sep = ';')
 
 #criando gr?ficos
 #folhas ####################################
@@ -196,6 +217,18 @@ ggplot(folha_ldes_graf, (aes(x= A,
   scale_x_discrete(breaks = NULL) +
   labs() +
   geom_text(aes(label = G1), vjust= -0.3)
+
+ggplot(folha_arg_graf, (aes(x= A,
+                             y= B,
+                             fill = A))) +
+  geom_col(position="dodge", show.legend = TRUE) +
+  scale_fill_discrete(name="Tratamento") +
+  labs(title= 'Atividades - Arginase - Folhas',
+       x = 'Tratamento com NaCl',
+       y = 'Atividade da enzima Arginase \n (pmol min-1 mg prot-1)') +
+  scale_x_discrete(breaks = NULL) +
+  labs() +
+  geom_text(aes(label = G1), vjust= -0.3)
 #############################################
 #raizes ####################################
 ggplot(raiz_cas_graf, (aes(x= A,
@@ -218,6 +251,18 @@ ggplot(raiz_ldes_graf, (aes(x= A,
   labs(title= 'Atividades - L/D-DES - Raiz',
        x = 'Tratamento com NaCl',
        y = 'Atividade da enzima L/D-DES \n (pmol min-1 mg prot-1)') +
+  scale_x_discrete(breaks = NULL) +
+  labs() +
+  geom_text(aes(label = G1), vjust= -0.3)
+
+ggplot(raiz_arg_graf, (aes(x= A,
+                            y= B,
+                            fill = A))) +
+  geom_col(position="dodge", show.legend = TRUE) +
+  scale_fill_discrete(name="Tratamento") +
+  labs(title= 'Atividades - Arginase - Raiz',
+       x = 'Tratamento com NaCl',
+       y = 'Atividade da enzima Arginase \n (pmol min-1 mg prot-1)') +
   scale_x_discrete(breaks = NULL) +
   labs() +
   geom_text(aes(label = G1), vjust= -0.3)
